@@ -14,6 +14,7 @@ namespace StateMachine.CharacterState
         public void Enter(Character entity)
         {
             Debug.Log(entity + " :Enter");
+            entity.SetLeaderMaterial();
         }
 
         public void Exit(Character entity)
@@ -25,6 +26,7 @@ namespace StateMachine.CharacterState
         public void Update(Character entity)
         {
             Debug.Log(entity + " :Update");
+            entity.navMeshAgent.SetDestination(entity.CurrentDestination);
         }
     }
 }

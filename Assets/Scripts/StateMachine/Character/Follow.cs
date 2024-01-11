@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 namespace StateMachine.CharacterState
 {
@@ -15,6 +14,7 @@ namespace StateMachine.CharacterState
         public void Enter(Character entity)
         {
             Debug.Log(entity + " :Enter");
+            entity.SetFollowerMaterial();
         }
 
         public void Exit(Character entity)
