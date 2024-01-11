@@ -8,9 +8,12 @@ public class Character
     private readonly float MobilityPower;
     private readonly float Stamina;
 
-    private readonly Transform transform;
-    private readonly NavMeshAgent navMeshAgent;
     private IState<Character> currentState;
+
+    private Vector3 currentDestination;
+
+    public readonly Transform transform;
+    public readonly NavMeshAgent navMeshAgent;
 
     public Character(float moveSpeed, float mobilityPower, float stamina, Transform transform, NavMeshAgent navMeshAgent)
     {
@@ -23,9 +26,22 @@ public class Character
         SetParametersAgent(MoveSpeed, MobilityPower);
     }
 
+    public void Move()
+    {
+        navMeshAgent.SetDestination(currentDestination);
+    }
+
+    public void SetNewDestination(Vector3 destination)
+    {
+        currentDestination = destination;
+    }
+
     public void SetState(IState<Character> state)
     {
+        if (currentState != null)
+            currentState.Exit(this);
         currentState = state;
+        currentState.Enter(this);
     }
 
     private void SetParametersAgent(float speed, float mobility)

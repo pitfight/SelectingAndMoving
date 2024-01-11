@@ -241,6 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bac151310aaa4e1cbf9329efb0df53a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isometricCamera: {fileID: 1150500051}
 --- !u!1001 &238591326
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -841,6 +842,7 @@ MonoBehaviour:
   mouseColliderLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  teamCoordinator: {fileID: 119730020}
 --- !u!4 &583818201
 Transform:
   m_ObjectHideFlags: 0

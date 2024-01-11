@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace StateMachine.CharacterState
 {
     public class Leader : IState<Character>
@@ -11,17 +13,18 @@ namespace StateMachine.CharacterState
 
         public void Enter(Character entity)
         {
-            throw new System.NotImplementedException();
+            Debug.Log(entity + " :Enter");
         }
 
         public void Exit(Character entity)
         {
-            throw new System.NotImplementedException();
+            Debug.Log(entity + " :Exit");
+            entity.navMeshAgent.ResetPath();
         }
 
         public void Update(Character entity)
         {
-            throw new System.NotImplementedException();
+            Debug.Log(entity + " :Update");
         }
     }
 }

@@ -8,6 +8,7 @@ public class MouseInputReader : MonoBehaviour
     private const float MAX_RAYCAST_DISTANCE = 200f;
 
     [SerializeField] private LayerMask mouseColliderLayerMask = new LayerMask();
+    [SerializeField] private TeamCoordinator teamCoordinator;
 
     private void Update()
     {
@@ -24,6 +25,7 @@ public class MouseInputReader : MonoBehaviour
                 if (NavMesh.SamplePosition(raycastHit.point, out var navMeshHit, MAX_NAV_MESH_DISTANCE, NavMesh.AllAreas))
                 {
                     transform.position = navMeshHit.position;
+                    teamCoordinator.SetDestination(transform.position);
                 }
             }
         }

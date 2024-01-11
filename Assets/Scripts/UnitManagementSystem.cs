@@ -39,13 +39,10 @@ public class UnitManagementSystem : MonoBehaviour
         {
             var character = CreateUnit(characterPrefab, spawnPosition);
             teamCoordinator.Add(character);
-            if (index == 0)
-                teamCoordinator.SetLeader(character);
             index++;
-
             buttonBar.CreateButton(character, teamCoordinator, index);
 
-            spawnPosition.x += 1.1f;
+            spawnPosition.x += 2f;
         }
     }
 
