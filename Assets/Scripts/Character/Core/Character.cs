@@ -8,12 +8,15 @@ public class Character
     private readonly float MobilityPower;
     private readonly float Stamina;
 
-    private IState<Character> currentState;
+    private readonly MeshRenderer meshRenderer;
+    private readonly MaterialRender materialRender;
 
-    private Vector3 currentDestination;
+    private IState<Character> currentState;
 
     public readonly Transform transform;
     public readonly NavMeshAgent navMeshAgent;
+
+    public Vector3 CurrentDestination { get; private set; }
 
     public Character(float moveSpeed, float mobilityPower, float stamina, Transform transform, NavMeshAgent navMeshAgent)
     {
@@ -24,16 +27,24 @@ public class Character
         this.navMeshAgent = navMeshAgent;
 
         SetParametersAgent(MoveSpeed, MobilityPower);
+
+        meshRenderer = transform.GetComponentInChildren<MeshRenderer>();
+        materialRender = Resources.Load<MaterialRender>("MaterialData");
     }
 
     public void Move()
     {
-        navMeshAgent.SetDestination(currentDestination);
+        currentState.Update(this);
+    }
+
+    public void Group()
+    {
+        navMeshAgent.SetDestination(CurrentDestination);
     }
 
     public void SetNewDestination(Vector3 destination)
     {
-        currentDestination = destination;
+        CurrentDestination = destination;
     }
 
     public void SetState(IState<Character> state)
@@ -42,6 +53,16 @@ public class Character
             currentState.Exit(this);
         currentState = state;
         currentState.Enter(this);
+    }
+
+    public void SetLeaderMaterial()
+    {
+        meshRenderer.material = materialRender.Leader;
+    }
+
+    public void SetFollowerMaterial()
+    {
+        meshRenderer.material = materialRender.Follower;
     }
 
     private void SetParametersAgent(float speed, float mobility)

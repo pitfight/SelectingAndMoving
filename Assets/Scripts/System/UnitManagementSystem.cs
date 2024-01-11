@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -44,6 +42,8 @@ public class UnitManagementSystem : MonoBehaviour
 
             spawnPosition.x += 2f;
         }
+
+        teamCoordinator.SetLeader();
     }
 
     private Character CreateUnit(GameObject prefab, Vector3 position)
