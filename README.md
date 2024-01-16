@@ -15,3 +15,5 @@ Assign a leader agent and set its path or destination.
 Add follower agents and link them to the leader agent.
 Customize the follow behavior and parameters as needed.
 Run the scene and observe how follower agents adapt to the leader's movement.
+
+![JuniorMaksymGodovanetsCobble2](https://github.com/pitfight/SelectingAndMoving/assets/71433383/52da2088-59cf-4004-8a6e-bf20b6070a46)
