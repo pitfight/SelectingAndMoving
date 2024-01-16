@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Animations;
 
 public class UnitManagementSystem : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class UnitManagementSystem : MonoBehaviour
 
         while (index < countCharacters)
         {
-            var character = CreateUnit(characterPrefab, spawnPosition);
+            var character = CreateUnit(characterPrefab, spawnPosition, index);
             teamCoordinator.Add(character);
             index++;
             buttonBar.CreateButton(character, teamCoordinator, index);
@@ -46,12 +47,18 @@ public class UnitManagementSystem : MonoBehaviour
         teamCoordinator.SetLeader();
     }
 
-    private Character CreateUnit(GameObject prefab, Vector3 position)
+    private Character CreateUnit(GameObject prefab, Vector3 position, int priority)
     {
         var unit = Instantiate(prefab);
         unit.transform.position = position;
 
+        int characterIndex = priority + 1;
+        var text = Utils.CreateWorldText(unit.transform, characterIndex.ToString(), new Vector3(0f, 1.5f, 0f), 15, Color.cyan, TMPro.TextAlignmentOptions.Midline, 999);
+        text.transform.localScale = new Vector3(-1f, 1f, 1f);
+        SetObjectLookToCamera(text.gameObject);
+
         var agent = unit.GetComponent<NavMeshAgent>();
+        agent.avoidancePriority = priority * 10;
 
         float speed = GenerateStatModifier(unitsSpeed);
         float mobility = GenerateStatModifier(unitsMobility);
@@ -65,5 +72,15 @@ public class UnitManagementSystem : MonoBehaviour
     private float GenerateStatModifier(float stat)
     {
         return stat * (float)(random.NextDouble() * (maxModifier - minModifier) + minModifier);
+    }
+
+    private void SetObjectLookToCamera(GameObject obj)
+    {
+        var lookAtConstraint = obj.AddComponent<LookAtConstraint>();
+        ConstraintSource source = new ConstraintSource();
+        source.sourceTransform = Camera.main.transform;
+        source.weight = 1;
+        lookAtConstraint.AddSource(source);
+        lookAtConstraint.constraintActive = true;
     }
 }

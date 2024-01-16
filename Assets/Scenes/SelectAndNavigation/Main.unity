@@ -509,6 +509,7 @@ MonoBehaviour:
   unitsStamina: 15
   countCharacters: 7
   characterPrefab: {fileID: 8507311964729623596, guid: d63ead6e758404dc2849ec340d971482, type: 3}
+  lookAtConstraint: {fileID: 0}
   buttonBar: {fileID: 1532418655}
   teamCoordinator: {fileID: 119730020}
   spawnPoint: {fileID: 1760633875}
