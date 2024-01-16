@@ -1,14 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
-using StateMachine.CharacterState;
-using System.Linq;
 using UnityEngine.AI;
+using StateMachine.CharacterState;
 
 public class TeamCoordinator : MonoBehaviour
 {
     private Character currentLeader;
     private List<Character> group = new List<Character>();
-    private Character[] followerGroup;
 
     [Header("Group formation")]
     [SerializeField] private GroupFormationType groupFormationType = GroupFormationType.Liner;
@@ -17,20 +15,19 @@ public class TeamCoordinator : MonoBehaviour
     [Header("References")]
     [SerializeField] private IsometricCamera isometricCamera;
 
-    public void SetLeader(Character newLeader = null)
+    public void SetLeader(int index = 0)
     {
-        if (newLeader == null)
-            currentLeader = group[0];
-        else
-            currentLeader = newLeader;
+        currentLeader = group[index];
+
         currentLeader.SetState(new Leader(currentLeader));
         isometricCamera.SetTarget(currentLeader.transform);
 
-        followerGroup = group.Where(element => !element.Equals(currentLeader)).ToArray();
-
-        foreach (var follower in followerGroup)
+        foreach (var follower in group)
         {
-            follower.SetState(new Follow(currentLeader));
+            if (follower.ID != currentLeader.ID)
+            {
+                follower.SetState(new Follow(currentLeader));
+            }
         }
     }
 
@@ -54,9 +51,12 @@ public class TeamCoordinator : MonoBehaviour
         {
             if (currentLeader.navMeshAgent.remainingDistance >= 0.5f)
             {
-                foreach (var follower in followerGroup)
+                foreach (var follower in group)
                 {
-                    follower.Move();
+                    if (follower.ID != currentLeader.ID)
+                    {
+                        follower.Move();
+                    }
                 }
             }
             else
@@ -82,41 +82,53 @@ public class TeamCoordinator : MonoBehaviour
     {
         Vector3 leaderPosition = currentLeader.transform.position;
         Vector3 leaderDirection = -currentLeader.transform.forward;
-        for (int i = 0; i < followerGroup.Length; i++)
+        int offset = 0;
+        foreach (var follower in group)
         {
-            Vector3 targetPosition = leaderPosition + leaderDirection * (spacing * (i + 1));
-            followerGroup[i].SetNewDestination(targetPosition);
-            followerGroup[i].Group();
+            if (follower.ID != currentLeader.ID)
+            {
+                Vector3 targetPosition = leaderPosition + leaderDirection * (spacing * (offset + 1));
+                follower.SetNewDestination(targetPosition);
+                follower.Group();
+                offset++;
+            }
         }
     }
 
     private void FormationCircle()
     {
-        float angleStep = 360.0f / followerGroup.Length;
-        for (int i = 0; i < followerGroup.Length; i++)
+        float angleStep = 360.0f / group.Count -1;
+        int indexStep = 0;
+        foreach (var follower in group)
         {
-            float angle = angleStep * i;
-            Vector3 direction = Quaternion.Euler(0, angle, 0) * Vector3.forward;
-            Vector3 position = currentLeader.transform.position + direction * spacing;
-            followerGroup[i].SetNewDestination(position);
-            followerGroup[i].Group();
+            if (follower.ID != currentLeader.ID)
+            {
+                float angle = angleStep * indexStep;
+                Vector3 direction = Quaternion.Euler(0, angle, 0) * Vector3.forward;
+                Vector3 position = currentLeader.transform.position + direction * spacing;
+                follower.SetNewDestination(position);
+                follower.Group();
+                indexStep++;
+            }
         }
     }
 
     private void FormationRandomly()
     {
         float radius = spacing * 2;
-
-        foreach (var agent in followerGroup)
+        foreach (var agent in group)
         {
-            Vector3 randomDirection = Random.insideUnitSphere * radius;
-            randomDirection += currentLeader.transform.position;
-
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomDirection, out hit, radius, NavMesh.AllAreas))
+            if (agent.ID != currentLeader.ID)
             {
-                agent.SetNewDestination(hit.position);
-                agent.Group();
+                Vector3 randomDirection = Random.insideUnitSphere * radius;
+                randomDirection += currentLeader.transform.position;
+
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(randomDirection, out hit, radius, NavMesh.AllAreas))
+                {
+                    agent.SetNewDestination(hit.position);
+                    agent.Group();
+                }
             }
         }
     }

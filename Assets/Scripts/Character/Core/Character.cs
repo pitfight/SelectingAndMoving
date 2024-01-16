@@ -13,13 +13,16 @@ public class Character
 
     private IState<Character> currentState;
 
+    public readonly int ID;
     public readonly Transform transform;
     public readonly NavMeshAgent navMeshAgent;
 
     public Vector3 CurrentDestination { get; private set; }
 
-    public Character(float moveSpeed, float mobilityPower, float stamina, Transform transform, NavMeshAgent navMeshAgent)
+    public Character(float moveSpeed, float mobilityPower, float stamina, Transform transform, NavMeshAgent navMeshAgent, int index)
     {
+        ID = index;
+
         MoveSpeed = moveSpeed;
         MobilityPower = mobilityPower;
         Stamina = stamina;
