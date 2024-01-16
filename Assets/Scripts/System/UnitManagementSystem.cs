@@ -4,8 +4,6 @@ using UnityEngine.Animations;
 
 public class UnitManagementSystem : MonoBehaviour
 {
-    private System.Random random = new System.Random();
-
     [Header("Prototype settings")]
     [SerializeField] private float minModifier = 0.9f;
     [SerializeField] private float maxModifier = 1.1f;
@@ -18,7 +16,7 @@ public class UnitManagementSystem : MonoBehaviour
     [SerializeField] private GameObject characterPrefab;
 
     [Header("Game references")]
-    [SerializeField] private ButtonBar buttonBar;
+    [SerializeField] private CharacterSelectionBar selectionBar;
     [SerializeField] private TeamCoordinator teamCoordinator;
 
     [Header("Position references")]
@@ -38,38 +36,44 @@ public class UnitManagementSystem : MonoBehaviour
         {
             var character = CreateUnit(characterPrefab, spawnPosition, index);
             teamCoordinator.Add(character);
-            index++;
-            buttonBar.CreateButton(character, teamCoordinator, index);
 
+            if (index == 0)
+                selectionBar.CreateButton(teamCoordinator, index, false);
+            else
+                selectionBar.CreateButton(teamCoordinator, index);
+
+            index++;
             spawnPosition.x += 2f;
         }
 
-        teamCoordinator.SetLeader();
+        teamCoordinator.SetLeader(0);
     }
 
-    private Character CreateUnit(GameObject prefab, Vector3 position, int priority)
+    private Character CreateUnit(GameObject prefab, Vector3 position, int index)
     {
         var unit = Instantiate(prefab);
         unit.transform.position = position;
 
-        int characterIndex = priority + 1;
+        int characterIndex = index + 1;
         var text = Utils.CreateWorldText(unit.transform, characterIndex.ToString(), new Vector3(0f, 1.5f, 0f), 15, Color.cyan, TMPro.TextAlignmentOptions.Midline, 999);
         text.transform.localScale = new Vector3(-1f, 1f, 1f);
         SetObjectLookToCamera(text.gameObject);
 
         var agent = unit.GetComponent<NavMeshAgent>();
-        agent.avoidancePriority = priority * 10;
+        agent.avoidancePriority = index * 10;
 
-        float speed = GenerateStatModifier(unitsSpeed);
-        float mobility = GenerateStatModifier(unitsMobility);
-        float stamina = GenerateStatModifier(unitsStamina);
+        System.Random random = new System.Random();
 
-        var character = new Character(speed, mobility, stamina, unit.transform, agent);
+        float speed = GenerateStatModifier(unitsSpeed, random);
+        float mobility = GenerateStatModifier(unitsMobility, random);
+        float stamina = GenerateStatModifier(unitsStamina, random);
+
+        var character = new Character(speed, mobility, stamina, unit.transform, agent, index);
 
         return character;
     }
 
-    private float GenerateStatModifier(float stat)
+    private float GenerateStatModifier(float stat, System.Random random)
     {
         return stat * (float)(random.NextDouble() * (maxModifier - minModifier) + minModifier);
     }

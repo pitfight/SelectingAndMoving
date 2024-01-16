@@ -1,0 +1,38 @@
+.character-selector-button {
+    font-size: 100%;
+    -unity-text-outline-width: 0;
+    max-width: none;
+    max-height: none;
+    margin-top: 0;
+    padding-top: 0;
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    justify-content: space-around;
+    height: 10%;
+    -unity-text-align: middle-center;
+    text-overflow: clip;
+    background-color: rgb(135, 135, 135);
+    -unity-text-outline-color: rgba(255, 255, 255, 0);
+    white-space: normal;
+}
+
+.character-selection-button-text {
+    width: 100%;
+    height: 100%;
+    font-size: 60px;
+    color: rgb(7, 7, 7);
+    background-color: rgba(17, 17, 17, 0);
+    -unity-font-style: normal;
+    align-self: stretch;
+    -unity-text-align: middle-center;
+    min-width: 100%;
+    min-height: 100%;
+    -unity-slice-scale: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    visibility: visible;
+    opacity: 1;
+    scale: 1 1;
+    -unity-background-scale-mode: scale-and-crop;
+}

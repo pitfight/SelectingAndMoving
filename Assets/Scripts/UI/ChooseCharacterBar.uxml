@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UIChooseCharacter.uss?fileID=7433441132597879392&amp;guid=a02dc4ebdd0cf460f8c8d479710b3ef3&amp;type=3#UIChooseCharacter" />
+    <ui:VisualElement name="CharacterBar" style="flex-grow: 1; width: 10%; position: relative; background-color: rgba(255, 255, 255, 0.63); left: 90%; align-items: stretch; opacity: 1; right: auto; justify-content: flex-start; align-self: stretch;" />
+</ui:UXML>
